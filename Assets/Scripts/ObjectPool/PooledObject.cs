@@ -6,11 +6,8 @@ public class PooledObject : MonoBehaviour
     [SerializeField] bool autoRelease;
     [SerializeField] float releaseTime;
 
-    private ObjectPool_1 pool;
-    public ObjectPool_1 Pool { get { return pool; } set { pool = value; } }
-
-    private Rigidbody rigid;
-    public Vector3 Velocity { get { return rigid.velocity; } set { rigid.velocity = value; } }
+    private ObjectPools pool;
+    public ObjectPools Pool { get { return pool; } set { pool = value; } }
 
     private void OnEnable()
     {

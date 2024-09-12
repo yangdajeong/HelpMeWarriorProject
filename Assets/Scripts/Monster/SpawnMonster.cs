@@ -7,7 +7,10 @@ public class SpawnMonster : MonoBehaviour
     [SerializeField] Transform[] monsterSpawnPoints;
 
     [Range(0,100)]
-    public int spawnProbability = 20;
+    public int EasySpawnProbability = 20;
+
+    [Range(0, 100)]
+    public int HardSpawnProbability = 5;
 
     [SerializeField] float spawnDelay = 2;
     private float time;
@@ -15,10 +18,8 @@ public class SpawnMonster : MonoBehaviour
     private void Update()
     {
         if (PlayerController.speed == 0)
-        {
-            //time = Time.time;
             return;
-        }
+        
 
         time -= Time.deltaTime;
 
@@ -28,9 +29,14 @@ public class SpawnMonster : MonoBehaviour
             for (int i = 0; i < monsterSpawnPoints.Length; i++)
             {
                 int result = Random.Range(1, 100);
-                if (result < spawnProbability)
+
+                if (result < HardSpawnProbability) // HardMonster
                 {
-                    ObjectPool_1.instance.GetPool(monsterSpawnPoints[i].position, Quaternion.identity);
+                    ObjectPools.instance.GetPool("MonsterHard", monsterSpawnPoints[i].position, Quaternion.identity);
+                }
+                else if (result < EasySpawnProbability) // EasyMonster
+                {
+                    ObjectPools.instance.GetPool("MonsterEasy",monsterSpawnPoints[i].position, Quaternion.identity);
                 }
             }
 

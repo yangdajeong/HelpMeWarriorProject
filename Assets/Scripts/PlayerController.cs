@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageble
 {
+    [SerializeField] int hp;
     [SerializeField] int attackPower;
     [SerializeField] int attackDelay;
 
+    [SerializeField] SpriteRenderer[] playerSprite;
     [SerializeField] float distance;
     [SerializeField] LayerMask monsterLayer;
     [SerializeField] LayerMask transPauseLayer;
@@ -36,7 +39,6 @@ public class PlayerController : MonoBehaviour
         hit = Physics2D.Raycast(transform.position, Vector2.up, distance, monsterLayer);
         if (hit.collider != null && !isAttack)
         {
-
             AttackAni();
         }
         else if (hit.collider == null)
@@ -59,19 +61,52 @@ public class PlayerController : MonoBehaviour
     {
         IDamageble damageble = hit.collider.GetComponent<IDamageble>();
         if (damageble != null)
-        {
-            
+        { 
             damageble.Damaged(attackPower);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        speed = 0;
+        if(transPauseLayer.Contain(collision.gameObject.layer) && hit)
+        {
+            speed = 0;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        speed = 1;
+        if (transPauseLayer.Contain(collision.gameObject.layer))
+        {
+            speed = 1;
+        }
+    }
+
+    public void Damaged(int damage)
+    {
+        for (int i = 0; i < playerSprite.Length; i++)
+            playerSprite[i].color = Color.red;
+
+        hp -= damage;
+
+        StartCoroutine(resetColor());
+    }
+
+    IEnumerator resetColor()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        for (int i = 0; i < playerSprite.Length; i++)
+            playerSprite[i].color = new(1, 1, 1);
+
+        if ((hp <= 0))
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }

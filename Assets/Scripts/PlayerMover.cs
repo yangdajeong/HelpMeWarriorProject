@@ -60,7 +60,6 @@ public class PlayerMover : MonoBehaviour
             if (isArrived)
             {
                 isMove = false;
-                Debug.Log($"Arrived!");
                 rigidBody.velocity = Vector2.zero;  // 도착하면 속도를 0으로 설정하여 멈춤
             }
             else
