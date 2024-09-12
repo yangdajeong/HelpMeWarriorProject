@@ -14,7 +14,7 @@ public class Background : MonoBehaviour
 
     private void Update()
     {
-        transform.position = transform.position + Vector3.down * speed * Time.deltaTime; 
+        transform.position = transform.position + Vector3.down * PlayerController.speed * Time.deltaTime; 
 
         if(transform.position.y < -viewHeight )
         {
