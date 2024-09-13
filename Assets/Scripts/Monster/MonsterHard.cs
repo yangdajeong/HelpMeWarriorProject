@@ -1,31 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class MonsterHard : MonoBehaviour, IDamageble
 {
-    [SerializeField] int hp = 100;
     [SerializeField] LayerMask playerLayer;
     [SerializeField] float distance;
     [SerializeField] SpriteRenderer[] monsterSprite;
     [SerializeField] RaycastHit2D hit;
+    //[SerializeField] int collisionDamage;
     private bool playerFront = true;
 
+    [SerializeField] int currentHp;
+    public int CurrentHp { get { return currentHp; } set { currentHp = value; } }
+
+    [SerializeField] int maxHp = 200;
+    public int MaxHp { get { return maxHp; } set { maxHp = value; } }
+
+    //[SerializeField] TextMeshProUGUI damagedText;
+    [SerializeField] GameObject hpBar;
 
     float viewHeight;
 
     private void Awake()
     {
         viewHeight = Camera.main.orthographicSize * 2;
+        hpBar.SetActive(false);
     }
 
-    //private void Start()
-    //{
-    //    StartCoroutine(IsFire());
-    //    //InvokeRepeating("IsFire", 2f, 3f);
-    //}
+    private void Start()
+    {
+        currentHp = maxHp;
+    }
 
     private void Update()
     {
@@ -39,7 +48,7 @@ public class MonsterHard : MonoBehaviour, IDamageble
 
     //private void OnDrawGizmos()
     //{
-    //    Debug.DrawRay(transform.position, Vector2.down, Color.red, distance); //레이 보이게 하기
+    //    Debug.DrawRay(transform.position, Vector2.down, Color.red, attackDistance); //레이 보이게 하기
     //}
 
     void FixedUpdate()
@@ -62,10 +71,13 @@ public class MonsterHard : MonoBehaviour, IDamageble
 
     public void Damaged(int damage)
     {
+        if(!hpBar.activeSelf)
+            hpBar.SetActive(true);
+
         for (int i = 0; i < monsterSprite.Length; i++)
             monsterSprite[i].color = Color.red;
 
-        hp -= damage;
+        currentHp -= damage;
 
         StartCoroutine(resetColor());
     }
@@ -76,6 +88,8 @@ public class MonsterHard : MonoBehaviour, IDamageble
         if (pooledObject == null)
             return;
 
+        hpBar.SetActive(false);
+        currentHp = maxHp;
         transform.position = new Vector3(0, 20, 0);
         pooledObject.Release();
     }
@@ -89,10 +103,23 @@ public class MonsterHard : MonoBehaviour, IDamageble
         for (int i = 0; i < monsterSprite.Length; i++)
             monsterSprite[i].color = new Color(0.2793699f, 0.4995889f, 0.8113208f);
 
-        if ((hp <= 0))
+        if ((currentHp <= 0))
         {
+            currentHp = 0;  
             Die();
         }
     }
+
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (playerLayer.Contain(collision.gameObject.layer))
+    //    {
+    //        IDamageble damageble = collision.transform.GetComponent<IDamageble>();
+    //        if (damageble != null)
+    //        {
+    //            damageble.Damaged(collisionDamage);
+    //        }
+    //    }
+    //}
 }
 

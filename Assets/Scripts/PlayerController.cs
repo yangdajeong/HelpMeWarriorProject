@@ -1,22 +1,27 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour, IDamageble
 {
-    [SerializeField] int hp;
+    [SerializeField] int currentPlayerHp;
+    public int CurrentPlayerHp { get { return currentPlayerHp; } set { currentPlayerHp = value; } }
+
+    [SerializeField] int maxPlayerHp = 300;
+    public int MaxPlayerHp { get { return maxPlayerHp; } set { maxPlayerHp = value; } }
     [SerializeField] int attackPower;
     [SerializeField] int attackDelay;
+    [SerializeField] int damagedDelay;
+    [SerializeField] int collisionDamage;
 
-    [SerializeField] SpriteRenderer[] playerSprite;
-    [SerializeField] float distance;
+    [SerializeField] float attackDistance;
+    [SerializeField] float frontMonsterHitDistance;
     [SerializeField] LayerMask monsterLayer;
     [SerializeField] LayerMask transPauseLayer;
-    RaycastHit2D hit;
+    RaycastHit2D attackHit;
+    RaycastHit2D frontMonsterHit;
+
+    [SerializeField] SpriteRenderer[] playerSprite;
 
     public static int speed = 1;
 
@@ -26,24 +31,36 @@ public class PlayerController : MonoBehaviour, IDamageble
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();    
+        animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        currentPlayerHp = maxPlayerHp;
     }
 
     private void OnDrawGizmos()
     {
-        Debug.DrawRay(transform.position, Vector2.up, Color.red, distance); //레이 보이게 하기
+        Debug.DrawRay(transform.position, Vector2.up, Color.red, 0.1f); //레이 보이게 하기
     }
 
     void FixedUpdate()
     {
-        hit = Physics2D.Raycast(transform.position, Vector2.up, distance, monsterLayer);
-        if (hit.collider != null && !isAttack)
+        frontMonsterHit = Physics2D.Raycast(transform.position, Vector2.up, frontMonsterHitDistance, monsterLayer);
+
+        attackHit = Physics2D.Raycast(transform.position, Vector2.up, attackDistance, monsterLayer);
+        if (attackHit.collider != null && !isAttack)
         {
             AttackAni();
         }
     }
 
-    public async Task AttackAni() 
+    private void Update()
+    {
+        damagedDelayTimer -= Time.deltaTime;
+    }
+
+    public async Task AttackAni()
     {
         isAttack = true;
         animator.SetTrigger("isAttack");
@@ -55,18 +72,27 @@ public class PlayerController : MonoBehaviour, IDamageble
 
     public void Attack()
     {
-        IDamageble damageble = hit.collider.GetComponent<IDamageble>();
+        IDamageble damageble = attackHit.collider.GetComponent<IDamageble>();
         if (damageble != null)
-        { 
+        {
             damageble.Damaged(attackPower);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(transPauseLayer.Contain(collision.gameObject.layer) && hit)
+        if (transPauseLayer.Contain(collision.gameObject.layer) && attackHit)
         {
+            animator.SetBool("isRun", false);
             speed = 0;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (monsterLayer.Contain(collision.gameObject.layer) && frontMonsterHit)
+        {
+            Damaged(collisionDamage);
         }
     }
 
@@ -74,32 +100,41 @@ public class PlayerController : MonoBehaviour, IDamageble
     {
         if (transPauseLayer.Contain(collision.gameObject.layer))
         {
+            animator.SetBool("isRun", true);
             speed = 1;
         }
     }
 
+    public float damagedDelayTimer;
+
     public void Damaged(int damage)
     {
-        Debug.Log("공격당함");
+        if (damagedDelayTimer > 0)
+            return;
+
+        Debug.Log("플레이어 공격당함");
+
+        damagedDelayTimer = damagedDelay;
         for (int i = 0; i < playerSprite.Length; i++)
             playerSprite[i].color = Color.red;
 
-        hp -= damage;
+        currentPlayerHp -= damage;
 
         StartCoroutine(resetColor());
     }
 
     IEnumerator resetColor()
     {
+        if ((currentPlayerHp <= 0))
+        {
+            currentPlayerHp = 0;
+            Die();
+        }
+
         yield return new WaitForSeconds(0.2f);
 
         for (int i = 0; i < playerSprite.Length; i++)
-            playerSprite[i].color =  Color.white;
-
-        if ((hp <= 0))
-        {
-            Die();
-        }
+            playerSprite[i].color = Color.white;
     }
 
     private void Die()

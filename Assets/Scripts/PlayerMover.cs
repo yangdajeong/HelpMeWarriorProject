@@ -52,7 +52,7 @@ public class PlayerMover : MonoBehaviour
     {
         if (isMove)
         {
-           //float distance = Vector3.Distance(destination, transform.position);  // 목적지와의 거리 계산
+           //float attackDistance = Vector3.Distance(destination, transform.position);  // 목적지와의 거리 계산
             float distance = Vector2.Distance(new Vector2(destination.x,0), new Vector2(transform.position.x, 0)); //2D
             bool isArrived = distance <= 0.1f;  // 목적지에 거의 도달한 경우
             //Debug.Log(isArrived);
@@ -82,9 +82,9 @@ public class PlayerMover : MonoBehaviour
 
 
                 // 손가락 위치에 가까워지면 속도 줄이기 (추가적인 속도 감속)
-                //if (distance < 1f)
+                //if (attackDistance < 1f)
                 //{
-                //    rigidBody.velocity *= distance;  // 거리에 따라 속도를 감속
+                //    rigidBody.velocity *= attackDistance;  // 거리에 따라 속도를 감속
                 //}
             }
 
