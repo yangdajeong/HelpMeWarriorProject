@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Navigation : MonoBehaviour
 {
     [SerializeField] float destination;
+    public float Destination { get { return destination; } }
     [SerializeField] float currentPosition = 0;
     [SerializeField] Slider naviSlider;
 

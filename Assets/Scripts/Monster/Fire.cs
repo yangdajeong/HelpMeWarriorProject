@@ -28,7 +28,6 @@ public class Fire : MonoBehaviour
             if (damageble != null)
             {
                 damageble.Damaged(fireDamage);
-                Debug.Log(gameObject.name);
 
                 PooledObject pooledObject = gameObject.GetComponent<PooledObject>();
                 if (pooledObject == null)

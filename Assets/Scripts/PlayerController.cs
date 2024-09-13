@@ -105,14 +105,12 @@ public class PlayerController : MonoBehaviour, IDamageble
         }
     }
 
-    public float damagedDelayTimer;
+    private float damagedDelayTimer;
 
     public void Damaged(int damage)
     {
         if (damagedDelayTimer > 0)
             return;
-
-        Debug.Log("플레이어 공격당함");
 
         damagedDelayTimer = damagedDelay;
         for (int i = 0; i < playerSprite.Length; i++)
