@@ -881,6 +881,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5352643624617346965, guid: e34c6d03699fc3e4083edff3ca37d866, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7031983134854070676, guid: e34c6d03699fc3e4083edff3ca37d866, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.04
@@ -1734,8 +1738,8 @@ MonoBehaviour:
   - {fileID: 1664621933}
   - {fileID: 1401893602}
   - {fileID: 1337287185}
-  EasySpawnProbability: 17
-  HardSpawnProbability: 3
+  EasySpawnProbability: 0
+  HardSpawnProbability: 1
   spawnDelay: 1
 --- !u!1 &2133999779
 GameObject:

@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MonsterHard : MonoBehaviour, IDamageble
 {
     [SerializeField] int hp = 100;
-    [SerializeField] LayerMask returnObject;
+    [SerializeField] LayerMask playerLayer;
+    [SerializeField] float distance;
     [SerializeField] SpriteRenderer[] monsterSprite;
+    [SerializeField] RaycastHit2D hit;
+    private bool playerFront = true;
+
 
     float viewHeight;
 
@@ -15,10 +21,11 @@ public class MonsterHard : MonoBehaviour, IDamageble
         viewHeight = Camera.main.orthographicSize * 2;
     }
 
-    private void Start()
-    {
-        InvokeRepeating("IsFire", 2f, 3f);
-    }
+    //private void Start()
+    //{
+    //    StartCoroutine(IsFire());
+    //    //InvokeRepeating("IsFire", 2f, 3f);
+    //}
 
     private void Update()
     {
@@ -30,9 +37,26 @@ public class MonsterHard : MonoBehaviour, IDamageble
         }
     }
 
-    private void IsFire()
+    //private void OnDrawGizmos()
+    //{
+    //    Debug.DrawRay(transform.position, Vector2.down, Color.red, distance); //레이 보이게 하기
+    //}
+
+    void FixedUpdate()
     {
-        ObjectPools.instance.GetPool("Fire", transform.position, Quaternion.identity);   
+        hit = Physics2D.Raycast(transform.position, Vector2.down, distance, playerLayer);
+        if (hit.collider != null && playerFront)
+        {
+            StartCoroutine(IsFire());
+        }
+    }
+
+    IEnumerator IsFire()
+    {
+        playerFront = false;
+        yield return new WaitForSeconds(3f);
+        ObjectPools.instance.GetPool("Fire", transform.position, Quaternion.identity);
+        playerFront = true;
     }
 
 
@@ -52,6 +76,7 @@ public class MonsterHard : MonoBehaviour, IDamageble
         if (pooledObject == null)
             return;
 
+        transform.position = new Vector3(0, 20, 0);
         pooledObject.Release();
     }
 
@@ -62,7 +87,7 @@ public class MonsterHard : MonoBehaviour, IDamageble
         yield return new WaitForSeconds(0.2f);
 
         for (int i = 0; i < monsterSprite.Length; i++)
-            monsterSprite[i].color = new(1, 1, 1);
+            monsterSprite[i].color = new Color(0.2793699f, 0.4995889f, 0.8113208f);
 
         if ((hp <= 0))
         {

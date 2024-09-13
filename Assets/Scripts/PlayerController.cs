@@ -41,10 +41,6 @@ public class PlayerController : MonoBehaviour, IDamageble
         {
             AttackAni();
         }
-        else if (hit.collider == null)
-        {
-
-        }
     }
 
     public async Task AttackAni() 
@@ -84,6 +80,7 @@ public class PlayerController : MonoBehaviour, IDamageble
 
     public void Damaged(int damage)
     {
+        Debug.Log("공격당함");
         for (int i = 0; i < playerSprite.Length; i++)
             playerSprite[i].color = Color.red;
 
@@ -97,7 +94,7 @@ public class PlayerController : MonoBehaviour, IDamageble
         yield return new WaitForSeconds(0.2f);
 
         for (int i = 0; i < playerSprite.Length; i++)
-            playerSprite[i].color = new(1, 1, 1);
+            playerSprite[i].color =  Color.white;
 
         if ((hp <= 0))
         {

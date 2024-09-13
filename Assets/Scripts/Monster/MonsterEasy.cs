@@ -42,6 +42,7 @@ public class MonsterEasy : MonoBehaviour, IDamageble
         if (pooledObject == null)
             return;
 
+        transform.position = new Vector3(0, 20, 0);
         pooledObject.Release();
     }
 

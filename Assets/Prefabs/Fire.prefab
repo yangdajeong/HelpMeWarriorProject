@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7372593824461158810}
   - component: {fileID: 8618374270730788567}
   - component: {fileID: 6290754370598661791}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4911,7 +4911,7 @@ GameObject:
   - component: {fileID: 496487244642044111}
   - component: {fileID: 496487244642044109}
   - component: {fileID: 496487244642044110}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9811,7 +9811,7 @@ GameObject:
   - component: {fileID: 496487245117367873}
   - component: {fileID: 496487245117367879}
   - component: {fileID: 496487245117367872}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14662,7 +14662,7 @@ GameObject:
   - component: {fileID: 4721027040273265128}
   - component: {fileID: 8466365451394647939}
   - component: {fileID: 1714306728070765762}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19561,7 +19561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6106239336652604396}
   - component: {fileID: 309908454665629572}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19660,7 +19660,7 @@ GameObject:
   - component: {fileID: 1311793497429719948}
   - component: {fileID: 506202705689467074}
   - component: {fileID: 5230257183555655850}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
